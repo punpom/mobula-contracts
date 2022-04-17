@@ -16,8 +16,8 @@ contract MobulaPrivateSale is Ownable {
     IERC20 private MOBULA;
     IERC20 private USDC;
 
-    uint private constant MAX_USDC_ALLOWED = 1000 ** 6;
-    uint private constant MAX_USDC_ALLOWED_PER_USER = 10 ** 6;
+    uint private constant MAX_USDC_ALLOWED = 1000 ** 18;
+    uint private constant MAX_USDC_ALLOWED_PER_USER = 10 ** 18;
 
     bool public privateSaleended;
 
@@ -41,8 +41,9 @@ contract MobulaPrivateSale is Ownable {
     function deposit(uint256 _amount, bytes32[] calldata _proof) public callerIsUser {
         require(USDC.balanceOf(address(this)) + _amount <= MAX_USDC_ALLOWED);
         require(privateSaleended == false, "Private Sale ended");
-        require(amountUSDCPerWallet[msg.sender] < MAX_USDC_ALLOWED_PER_USER, "You have used all of ur whitelist");
+        require(amountUSDCPerWallet[msg.sender] < MAX_USDC_ALLOWED_PER_USER, "You have used all of your whitelist");
         require(isWhiteListed(msg.sender, _proof));
+        amountUSDCPerWallet[msg.sender] += _amount;
         USDC.transferFrom(msg.sender, address(this), _amount);
     }
 
@@ -50,7 +51,7 @@ contract MobulaPrivateSale is Ownable {
         require(privateSaleended == false, "Private Sale ended");
         require(isWhiteListed(msg.sender, _proof));
         require(amountUSDCPerWallet[msg.sender] > 1);
-        MOBULA.transferFrom(address(this), msg.sender, amountUSDCPerWallet[msg.sender] * tokenPerUSDC);
+        MOBULA.transfer(msg.sender, amountUSDCPerWallet[msg.sender] * tokenPerUSDC);
     }
 
     function endPrivateSale(bool _end) public onlyOwner {
