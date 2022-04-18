@@ -39,6 +39,7 @@ contract MobulaPrivateSale is Ownable {
     }
 
     function deposit(uint256 _amount, bytes32[] calldata _proof) public callerIsUser {
+        require(_amount > 0);
         require(USDC.balanceOf(address(this)) + _amount <= MAX_USDC_ALLOWED);
         require(privateSaleended == false, "Private Sale ended");
         require(amountUSDCPerWallet[msg.sender] < MAX_USDC_ALLOWED_PER_USER, "You have used all of your whitelist");
