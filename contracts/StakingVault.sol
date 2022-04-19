@@ -25,6 +25,17 @@ contract MobulaStakingVault is Ownable {
     address[] stakers;
     mapping (address => uint256) stakerIndexes;
 
+    function getRewardsEarned(address staker) public view returns (uint256) {
+        return stakersRewards[staker] + (balance[staker] * rewardsPerBlock * (block.number - lastUpdate[staker])) / 1e16;
+    }
+
+    function getLastUpdate(address staker) public view returns (uint256) {
+        return lastUpdate[staker];
+    }
+
+    function getStakerBalance(address staker) public view returns (uint256) {
+        return balance[staker];
+    }
 
 
 	 constructor(IERC20 _MOBULA, IERC20 _USDT) {
