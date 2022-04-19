@@ -26,6 +26,7 @@ contract MobulaPrivateSale is Ownable {
     bytes32 public merkleRoot;
 
     mapping(address => uint) public amountUSDCPerWallet;
+    mapping(address => uint) public MOBLToClaim;
 
     constructor(bytes32 _merkleRoot, IERC20 _MOBULA, IERC20 _USDC) {
         merkleRoot = _merkleRoot;
@@ -45,6 +46,7 @@ contract MobulaPrivateSale is Ownable {
         require(amountUSDCPerWallet[msg.sender] < MAX_USDC_ALLOWED_PER_USER, "You have used all of your whitelist");
         require(isWhiteListed(msg.sender, _proof));
         amountUSDCPerWallet[msg.sender] += _amount;
+        MOBLToClaim[msg.sender] += _amount;
         USDC.transferFrom(msg.sender, address(this), _amount);
     }
 
@@ -52,8 +54,8 @@ contract MobulaPrivateSale is Ownable {
         require(privateSaleended == false, "Private Sale ended");
         require(isWhiteListed(msg.sender, _proof));
         require(amountUSDCPerWallet[msg.sender] > 1);
-        MOBULA.transfer(msg.sender, amountUSDCPerWallet[msg.sender] * tokenPerUSDC);
-        amountUSDCPerWallet[msg.sender] = 0;
+        MOBULA.transfer(msg.sender, MOBLToClaim[msg.sender] * tokenPerUSDC);
+        MOBLToClaim[msg.sender] = 0;
     }
 
     function endPrivateSale(bool _end) public onlyOwner {
