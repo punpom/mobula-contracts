@@ -26,7 +26,7 @@ contract MobulaStakingVault is Ownable {
     mapping (address => uint256) stakerIndexes;
 
     function getRewardsEarned(address staker) public view returns (uint256) {
-        return stakersRewards[staker] + (balance[staker] * rewardsPerBlock * (block.number - lastUpdate[staker])) / 1e16;
+        return stakersRewards[staker] + (balance[staker] * rewardsPerBlock * (block.number - lastUpdate[staker])) / 1e18;
     }
 
     function getLastUpdate(address staker) public view returns (uint256) {
@@ -55,7 +55,7 @@ contract MobulaStakingVault is Ownable {
         uint256 _lastUpdate = lastUpdate[msg.sender];
         lastUpdate[msg.sender] = block.number;
         if (balance[msg.sender] > 0) {
-			stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e16;
+			stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e18;
 		} else {
 			addStaker(msg.sender);
 		}
@@ -66,7 +66,7 @@ contract MobulaStakingVault is Ownable {
 		require(amount > 0 && amount <= balance[msg.sender], "You cannot withdraw more than what you have!");
 		uint256 _lastUpdate = lastUpdate[msg.sender];
 		lastUpdate[msg.sender] = block.number;
-		stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e16;
+		stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e18;
 		balance[msg.sender] -= amount;
 		if (balance[msg.sender] == 0) {
 			removeStaker(msg.sender);
@@ -79,7 +79,7 @@ contract MobulaStakingVault is Ownable {
         require(stakersRewards[msg.sender] > 0, "No rewards to claim!");
 		uint256 _lastUpdate = lastUpdate[msg.sender];
 		lastUpdate[msg.sender] = block.number;
-		stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e16;
+		stakersRewards[msg.sender] += (balance[msg.sender] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e18;
 		uint256 rewards = stakersRewards[msg.sender];
 		stakersRewards[msg.sender] = 0;
 		USDT.transfer(msg.sender, rewards);
@@ -90,7 +90,7 @@ contract MobulaStakingVault is Ownable {
 		for (uint256 i = 0; i < stakers.length; i++) {
 			uint256 _lastUpdate = lastUpdate[stakers[i]];
 			lastUpdate[stakers[i]] = block.number;
-			stakersRewards[stakers[i]] += (balance[stakers[i]] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e16;
+			stakersRewards[stakers[i]] += (balance[stakers[i]] * rewardsPerBlock * (block.number - _lastUpdate)) / 1e18;
 		}
 
 		rewardsPerBlock = amount;

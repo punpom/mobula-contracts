@@ -53,6 +53,7 @@ contract MobulaPrivateSale is Ownable {
         require(isWhiteListed(msg.sender, _proof));
         require(amountUSDCPerWallet[msg.sender] > 1);
         MOBULA.transfer(msg.sender, amountUSDCPerWallet[msg.sender] * tokenPerUSDC);
+        amountUSDCPerWallet[msg.sender] = 0;
     }
 
     function endPrivateSale(bool _end) public onlyOwner {
