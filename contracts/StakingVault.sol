@@ -14,7 +14,6 @@ contract MobulaStakingVault is Ownable {
 	IERC20 private MOBULA;
     IERC20 private USDT;
 	
-    uint256 public maximumLocked = 2000 ** 18;
     uint256 public totalLocked;
     uint256 public rewardsPerBlock;
 
@@ -49,7 +48,7 @@ contract MobulaStakingVault is Ownable {
     }
 
 	function deposit(uint256 _amount) public callerIsUser {
-        require(_amount > 0 && totalLocked + _amount <= maximumLocked);
+        require(_amount > 0);
         USDT.transferFrom(msg.sender, address(this), _amount);
         totalLocked += _amount;
         uint256 _lastUpdate = lastUpdate[msg.sender];

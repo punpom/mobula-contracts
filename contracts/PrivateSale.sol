@@ -44,10 +44,11 @@ contract MobulaPrivateSale is Ownable {
         require(USDC.balanceOf(address(this)) + _amount <= MAX_USDC_ALLOWED);
         require(privateSaleended == false, "Private Sale ended");
         require(amountUSDCPerWallet[msg.sender] < MAX_USDC_ALLOWED_PER_USER, "You have used all of your whitelist");
-        require(isWhiteListed(msg.sender, _proof));
+        require(isWhiteListed(msg.sender, _proof));       
+        USDC.transferFrom(msg.sender, address(this), _amount);
         amountUSDCPerWallet[msg.sender] += _amount;
         MOBLToClaim[msg.sender] += _amount;
-        USDC.transferFrom(msg.sender, address(this), _amount);
+
     }
 
     function claim(bytes32[] calldata _proof) external callerIsUser {
