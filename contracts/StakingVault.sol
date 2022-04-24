@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract MobulaStakingVault is Ownable {
 
-	IERC20 private MOBULA;
+    IERC20 private MOBULA;
     IERC20 private USDT;
 	
     uint256 public totalLocked;
